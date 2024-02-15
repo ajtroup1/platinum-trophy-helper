@@ -1,0 +1,1 @@
+# platinum-trophy-helper
