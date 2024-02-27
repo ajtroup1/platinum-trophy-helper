@@ -1,0 +1,6 @@
+@platinum_trophy_helper_HostAddress = http://localhost:5116
+
+GET {{platinum_trophy_helper_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

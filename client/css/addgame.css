@@ -1,0 +1,36 @@
+.form-container {
+    padding: 20px;
+    border: 1px solid #ccc; /* Add border with a color */
+    border-radius: 5px; /* Optional: Add rounded corners */
+}
+
+/* Optional: If you also want space between the form and the left side */
+.form-div {
+    margin-left: 100px; /* Keeps space from the left side */
+    margin-right: 100px;
+    margin-top: 40px;
+}
+
+
+.banner-container {
+    width: 100%;
+    overflow: hidden; /* Ensure no horizontal scroll due to images */
+}
+
+/* CSS for the banner images */
+.banner-images {
+    display: flex; /* Use flexbox to align images horizontally */
+}
+
+.banner-images img {
+    flex: 1; /* Distribute available space evenly among images */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Set a maximum height to ensure uniformity */
+    width: 100%; /* Make each image fill the full width of the screen */
+    margin-right: 0; /* Remove right margin for all images */
+}
+
+/* Remove right margin for the last image */
+.banner-images img:last-child {
+    margin-right: 0;
+}

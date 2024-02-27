@@ -1,0 +1,52 @@
+.banner-container {
+    position: relative; /* Position relative to use absolute positioning */
+    width: 100%;
+    height: 100%; /* Set the height to 100% to match the background image */
+}
+
+.banner-image {
+    width: 100%;
+    position: relative;
+    height: auto; /* Set the height to auto to maintain aspect ratio */
+}
+
+.left-card {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    z-index: 1;
+    width: 300px;
+    height: auto; 
+}
+
+.right-card {
+    margin-top: 125px;
+    position: absolute;
+    top: 50%;
+    right: 50px;
+    z-index: 1;
+    width: 300px;
+    height: auto; 
+}
+
+.addgamecontainer {
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.addgamecontainer button {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

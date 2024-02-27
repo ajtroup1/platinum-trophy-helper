@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\platinum-trophy-helper.props" />
+</Project>
