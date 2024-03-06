@@ -93,6 +93,9 @@ async function handleAddGame(event){
         if (!response.ok) {
             throw new Error(`Failed to save stock. Status: ${response.status}`);
         }
+        else if(response.ok){
+            window.open("../html/gameslist.html")
+        }
     } catch (error) {
         console.error(error);
         // Handle the error as needed (e.g., show an error message to the user)

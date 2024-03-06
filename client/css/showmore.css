@@ -13,7 +13,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
+    width: 100%;
     max-width: 400px;
     padding: 20px;
     background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.8)), url('../resources/platinumbanner.jpg');
@@ -41,25 +41,9 @@
     display: flex; /* Use flexbox layout */
 }
 
-#left-box {
-    flex: 1; /* Make left box occupy half of the available space */
-    padding-right: 10px; /* Add some spacing between the left and right boxes */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 #right-box {
     flex: 1; /* Make right box occupy half of the available space */
     padding-left: 10px; /* Add some spacing between the left and right boxes */
-}
-
-#left-box textarea {
-    width: 100%; /* Make the textarea fill the entire width of the left box */
-}
-
-#right-box table {
-    width: 100%; /* Make the table fill the entire width of the right box */
 }
 
 
@@ -73,4 +57,43 @@
     width: 500px;
     font-style: italic;
     height: 25px;
+}
+#edit-container {
+    position: fixed; /* Fix the position of the container */
+    top: 50%; /* Place the container at the vertical center of the viewport */
+    left: 50%; /* Place the container at the horizontal center of the viewport */
+    transform: translate(-50%, -50%); /* Center the container */
+    z-index: 3; /* Ensure it's above other elements */
+    width: 100%; /* Adjust the width as needed */
+    max-width: 400px; /* Adjust the maximum width as needed */
+    padding: 20px;
+    height: 600px;
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.8)), url('../resources/platinumbanner.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center; /* Center the background image */
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds container height */
+}
+
+#add-achievements-button-container {
+    text-align: center; /* Center the button horizontally */
+    margin-bottom: 20px; /* Add some space between the button and the table */
+}
+
+#bottom-containers {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    width: 100%;
+}
+
+#right-box table {
+    width: 100%; /* Make the table fill the entire width of the right box */
+}
+.table {
+    width: 100%; /* Make all tables span the entire width of their container */
 }

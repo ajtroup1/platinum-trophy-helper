@@ -7,7 +7,7 @@ async function handleOnLoad(){
     await calculateStats()
     populateBanner()
     populateAddGame()
-    populateGames()
+    populateGames(games)
 }
 
 //dom manipulation
@@ -18,12 +18,12 @@ function populateBanner(){
         <div class="left-card">
         <div class="card" style="width: 18rem;">
             <div class="card-body">
-              <h5 class="card-title">Filters</h5>
+              <h5 class="card-title">Search</h5>
               <label for="compcheck">Completed: </label>
               <input type="checkbox" id="compcheck" onclick="handleCompleteFilter()"><br>
               <label for="namesearch">Search (name): </label>
               <input type="text" id="namesearch"><br>
-              <button onclick="populateGames()">Apply</button>
+              <button onclick="searchByName()">Apply</button>
               <button onclick="handleRevert()">Revert</button>
             </div>
           </div>
@@ -45,10 +45,15 @@ function populateAddGame(){
 
     document.getElementById("addgamecontainer").innerHTML = html
 }
-function populateGames(){
+function populateGames(games){
     console.log(games)
-    
-    let html = `
+    let html=``
+    if (games.length === 0) {
+        html += `
+            <h2 style="text-align: center; background-color: yellow;">No matched games found.</h2>
+        `
+    }
+    html += `
     <table class="table">
         <thead>
             <th>Name</th>
@@ -98,7 +103,7 @@ async function populateGamesArray(){
             throw new error("Network response is not ok");
         }else {
             games = await response.json();
-            return data;
+            return games;
         }
     } catch (error){
         console.log(error);
@@ -152,13 +157,12 @@ function handleCompleteFilter(){
     games = games.filter(game => {
         return game.completed === true;
     });
+    populateGames()
 }
 async function handleRevert(){
     document.getElementById("compcheck").checked = false; // Clear the checkbox
     document.getElementById("namesearch").value = '';
-    games = []
-    await populateGamesArray()
-    populateGames()
+    populateGames(games);
 }
 async function handleShowMore(id) {
     // Convert id to string before saving to localStorage
@@ -166,4 +170,12 @@ async function handleShowMore(id) {
 
     // Open the new window with the correct path and target
     window.open('../html/showmore.html', '_self');
+}
+function searchByName(){
+    let searchName = document.getElementById('namesearch').value.toLowerCase();
+    console.log('searching for game: ', searchName);
+    let filteredGames = games.filter(game => {
+        return game.name.toLowerCase().includes(searchName);
+    });
+    populateGames(filteredGames);
 }

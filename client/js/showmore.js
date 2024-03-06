@@ -1,12 +1,10 @@
 let filteredGames = []
 let achievements = []
-let notes = []
 
 //onload
 async function handleOnLoad(){
     await getGameByID()
     await getAchievements()
-    await getNotes()
     populateShowMore()
     populateNotes()
 }
@@ -71,7 +69,7 @@ function populateShowMore(){
                             html+=`<p>Play time: n/a</p>`
                         }
                         else{
-                            html+=`<p>Play time: ${filteredGames[0].playTime}</p>`
+                            html+=`<p>Play time: ${filteredGames[0].playTime} hours</p>`
                         }
                         html+=`
                         <p>Playthroughs: ${filteredGames[0].playthroughs}</p>
@@ -86,64 +84,56 @@ function populateShowMore(){
     document.getElementById('showmore').innerHTML = html;
 }
 function populateNotes() {
-    let html=``
-    if(notes.length === 0 || !notes[0].inputText || notes[0].inputText == ''){
-        html += `
-        <div id="left-box">
-            <textarea id="notes-textarea" rows="10" cols="50" placeholder="Write your notes here..."></textarea>
-            <button onclick="saveNotes()" id="savenotes-button">Save Notes</button>
-        </div>
-        `;
-    }
-    else{
-        html += `
-        <div id="left-box">
-            <textarea id="notes-textarea" rows="10" cols="50" placeholder="Write your notes here...">${notes[0].inputText}</textarea>
-            <button onclick="saveNotes()">Save Notes</button>
-        </div>
-        `;
-    }
+    let html = '';
 
-    //achievements (right side)
+    // Add Achievements Button
+    html += `
+    <div id="add-achievements-button-container">
+        <button class="btn btn-primary" onclick="handleAddAchievements()">Add Achievements</button>
+    </div>
+    `;
+
+    // Achievements Table
     html += `
     <div id="right-box">
-        <table class="table" id="achievements-table">
-            <thead>
-                <tr>
-                    <th>Achievement</th>
-                    <th>Completed</th>
-                    <th>Rarity</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>`;
+        <div id="achievements-table-container">
+            <table class="table" id="achievements-table">
+                <thead>
+                    <tr>
+                        <th>Achievement</th>
+                        <th>Completed</th>
+                        <th>Rarity</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
     if (achievements.length === 0) {
         html += `
             <tr>
                 <td colspan="4"><h5>No Achievements have been input for this game</h5></td>
             </tr>`;
-    }
-    else{
+    } else {
         achievements.forEach(achievement => {
             html += `
-                <tr>
-                    <td>${achievement.name}</td>
-                    <td>${achievement.completed ? 'Completed' : 'Not Completed'}</td>
-                    <td>${achievement.rarity}%</td>
-                    <td>${achievement.dateUnlocked || 'n/a'}</td>
-                </tr>`;
+            <tr>
+                <td>${achievement.name}</td>
+                <td>${achievement.completed ? 'Completed' : 'Not Completed'}</td>
+                <td>${achievement.rarity}%</td>
+                <td>${achievement.dateUnlocked || 'n/a'}</td>
+            </tr>`;
         });
     }
 
     html += `
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
     `;
 
     document.getElementById('bottom-containers').innerHTML = html;
 }
-
 
 //data
 async function getGameByID(){
@@ -179,28 +169,13 @@ async function getAchievements() {
         console.log(error);
     }
 }
-async function getNotes() {
-    try {
-        const response = await fetch('http://localhost:5116/api/notes');
-        if (!response.ok) {
-            throw new Error("Network response is not ok");
-        } else {
-            data = await response.json();
-            console.log('unfiltered notes:', data);
-            console.log('filtering on game ID#', filteredGames[0].id,', ', filteredGames[0].name)
-            notes = data.filter(note => note.gameID === filteredGames[0].id);
-            console.log('filtered note', notes);
-            return achievements;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 //handling
-async function handleEditGame(){
-    // Get the container element where the edit card will be displayed
+// Hide the edit container initially
+document.getElementById('edit-container').style.display = 'none';
 
+// Function to show the edit container when the edit button is clicked
+async function handleEditGame(){
     // Create HTML for the edit card
     let editCardHtml = `
     <div id="edit-container" class="d-flex justify-content-center align-items-center vh-100">
@@ -248,7 +223,11 @@ async function handleEditGame(){
     `;
     // Set the HTML content of the edit container
     document.getElementById('edit-container').innerHTML = editCardHtml;
+
+    // Show the edit container
+    document.getElementById('edit-container').style.display = 'block';
 }
+
 async function handlePutRequest(){
     // Get the difficulty value from the input field
     let difficulty = parseInt(document.getElementById('difficulty').value);
@@ -292,25 +271,26 @@ async function handlePutRequest(){
         // Handle the error as needed (e.g., show an error message to the user)
     }
 }
-async function saveNotes(){
-    let note = {
-        id: notes[0].id,
-        inputText: document.getElementById('notes-textarea').value,
-        gameID: notes[0].gameID
+
+async function handleAddAchievements(){
+    achievement = {
+        
     }
-    console.log('passing NOTE: ', note)
     try {
-        const response = await fetch(`http://localhost:5116/api/notes/${notes[0].id}`, {
-            method: "PUT",
-            body: JSON.stringify(note),
+        const response = await fetch(`http://localhost:5116/api/games/${filteredGames[0].id}`, {
+            method: "POST",
+            body: JSON.stringify(achievement),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to update notes. Status: ${response.status}`);
+            throw new Error(`Failed to update stock. Status: ${response.status}`);
         }
+
+        // Refresh the page after successful update
+        window.location.reload();
     } catch (error) {
         console.error(error);
         // Handle the error as needed (e.g., show an error message to the user)
