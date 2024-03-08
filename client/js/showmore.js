@@ -179,7 +179,7 @@ async function handleEditGame(){
     // Create HTML for the edit card
     let editCardHtml = `
     <div id="edit-container" class="d-flex justify-content-center align-items-center vh-100">
-        <div class="card w-50"> <!-- Adjust the width here -->
+        <div class="card w-50">
             <div class="card-body">
                 <h5 class="card-title">Edit Game</h5>
                 <form id="editForm">
@@ -272,12 +272,68 @@ async function handlePutRequest(){
     }
 }
 
-async function handleAddAchievements(){
-    achievement = {
-        
+function handleAddAchievements() {
+    let html = `
+    <div id="edit-container" class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card w-50">
+        <div class="card-body">
+            <h5 class="card-title">Add Achievement</h5>
+            <form id="editForm">
+                <div class="mb-3">
+                    <label for="aname" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="aname">
+                </div>
+                <div class="mb-3">
+                    <label for="desc" class="form-label">Description:</label>
+                    <input type="text" class="form-control" id="desc">
+                </div>
+                <div class="mb-3">
+                    <label for="rarity" class="form-label">Rarity:</label>
+                    <input type="number" class="form-control" id="rarity">
+                </div>
+                <div class="mb-3 form-check">
+                    <label class="form-check-label" for="date">Date Completed: </label>
+                    <input type="text" class="form-control" id="date">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="acompleted">
+                    <label class="form-check-label" for="acompleted">Completed?</label>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="handlePostAchievements()">Save Achievement</button>
+            </form>
+        </div>
+    </div>
+</div>
+`;
+
+    // Set the HTML content of the edit container
+    document.getElementById('edit-container').innerHTML = html;
+
+    // Show the edit container
+    document.getElementById('edit-container').style.display = 'block';
+}
+
+async function handlePostAchievements() {
+    let AdateUnlocked = ''
+    if(document.getElementById('date').value == ''){
+        AdateUnlocked = null
     }
+    else{
+        AdateUnlocked = document.getElementById('date').value
+    }
+    let achievement = {
+        name: document.getElementById('aname').value,
+        desc: document.getElementById('desc').value,
+        rarity: parseFloat(document.getElementById('rarity').value), // Ensure that this value is a double
+        dateUnlocked: AdateUnlocked,
+        gameID: filteredGames[0].id,
+        completed: document.getElementById('acompleted').checked,
+        id: 0,
+    };
+      
+    console.log('Adding achievement:', achievement);
     try {
-        const response = await fetch(`http://localhost:5116/api/games/${filteredGames[0].id}`, {
+        const response = await fetch('http://localhost:5116/api/achievements', {
             method: "POST",
             body: JSON.stringify(achievement),
             headers: {
@@ -286,11 +342,10 @@ async function handleAddAchievements(){
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to update stock. Status: ${response.status}`);
+            throw new Error(`Failed to add achievement. Status: ${response.status}`);
         }
 
-        // Refresh the page after successful update
-        window.location.reload();
+        // Refresh the page or update UI as needed
     } catch (error) {
         console.error(error);
         // Handle the error as needed (e.g., show an error message to the user)

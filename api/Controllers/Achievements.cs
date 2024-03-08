@@ -71,8 +71,41 @@ namespace MyApp.Namespace
 
         // POST api/<Achievements>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public string Post([FromBody] achievement myAchievement)
         {
+            System.Console.WriteLine(cs);
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(
+                        "INSERT INTO achievements (Aname, Adesc, rarity, dateUnlocked, gameID, completed) " +
+                        "VALUES (@Aname, @Adesc, @rarity, @dateUnlock, @gameID, @completed)", connection))
+                    {
+                        command.Parameters.AddWithValue("@Aname", myAchievement.name);
+                        command.Parameters.AddWithValue("@Adesc", myAchievement.desc);
+                        command.Parameters.AddWithValue("@rarity", myAchievement.rarity);
+                        command.Parameters.AddWithValue("@dateUnlocked", myAchievement.dateUnlocked);
+                        command.Parameters.AddWithValue("@gameID", myAchievement.gameID);
+                        command.Parameters.AddWithValue("@completed", myAchievement.completed);
+
+                        command.Prepare();
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+
+                return "Transaction added successfully";
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in PostTransaction: {ex.Message}");
+
+                // Return a more informative error message
+                return $"Error adding transaction: {ex.Message}";
+            }
         }
 
         // PUT api/<Achievements>/5
